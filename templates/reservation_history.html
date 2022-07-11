@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Hostel</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico"/>
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/img/favicon.ico') }}">
+</head>
+<body id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="#page-top">HOSTEL</a>
+        <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('hostel') }}">Hostel</a></li>
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('rooms') }}">Rooms</a></li>
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('rooms_category') }}">Room Category</a></li>
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('reservation') }}">Reservation</a></li>
+                                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('past_reservation') }}">Past Booking</a></li>
+                {% if session.get('id') is none %}
+                <li class="nav-item mx-0 "><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                              href="{{ url_for('login') }}">Login</a></li>
+                {% else %}
+                <li class="nav-item mx-0 "><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                              href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
+                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                                                     href="{{ url_for('register') }}">Register</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="bg-dark py-2 text-black pt-3">
+    <div class="container">
+        <h6><br>Booking History</h6>
+    </div>
+</div>
+<!-- Masthead-->
+<header class="masthead ">
+    <div class="container d-flex flex-column">
+        <div class="row">
+            <table class="table">
+                <thead>
+                <tr>
+                    {%for i in range(0, table_header_len_)%}
+                    <th scope="col">{{ table_header[i] }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {%for i in range(0, items_len_ )%}
+                <tr>
+                    <th scope="col">{{ i+ 1}}</th>
+                    {% for j in range(0, table_header_len_)%}
+                    <td>{{ items[i][j]}}</td>
+                    {% endfor %}
+                    {% if session['username'] == 'admin' %}
+                    <td>
+                        <form action="{{ url_for('past_reservation') }}" method="POST">
+                            <input id="accept_id" name="accept" type="hidden" value="{{items[i][0]}}">
+                            <button type="submit" class='btn btn-success'> Accept</button>
+                        </form>
+                    <td>
+                        <form action="{{ url_for('past_reservation') }}" method="POST">
+                            <input id="reject_id" name="reject" type="hidden" value="{{items[i][0]}}">
+                            <button type="submit" class='btn btn-danger'> Reject</button>
+                        </form>
+                    </td>
+                    {% else %}
+                    <td>
+                        <form action="{{ url_for('update_reservation') }}" method="POST">
+                            <input id="edit" name="edit" type="hidden" value="{{items[i][0]}}">
+                            <button type="submit" class='btn btn-primary'> Edit</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</header>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
+<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+</body>
+</html>
